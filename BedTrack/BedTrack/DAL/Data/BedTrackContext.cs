@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BedTrack.Domain.Models;
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace BedTrack.DAL.Data
 {
-    public class BedTrackContext : DbContext
+    public class BedTrackContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public DbSet<User> Users { get; set; } = null;
         public DbSet<Clinic> Clinics { get; set; } = null;

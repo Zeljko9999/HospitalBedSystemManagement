@@ -6,8 +6,6 @@ namespace BedTrack.Application.DTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Role { get; set; }
-        public string Email { get; set; }
 
         public string? Status { get; set; }
 
@@ -21,8 +19,6 @@ namespace BedTrack.Application.DTO
             {
                 Id = model.Id,
                 Name = model.Name,
-                Role = model.Role,
-                Email = model.Email,
                 Status = model.Status,
                 Clinic = model.Clicnic.Name,
                 Department = model.Department.Name,

@@ -10,6 +10,7 @@ using BedTrack.Domain.Logic;
 using BedTrack.Domain.Interfaces;
 using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BedTrack.Application.Controllers
 {
@@ -44,7 +45,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all clinics
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAll()
         {
             var clinics = await _clinicLogic.GetClinics();
@@ -53,7 +54,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the clinic with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = "Doctor, Admin")]
         public async Task<IActionResult> Get(int id)
         {
             var clinic = await _clinicLogic.GetClinic(id);
