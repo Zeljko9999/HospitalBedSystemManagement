@@ -18,6 +18,16 @@ var defaultCulture = CultureInfo.InvariantCulture;
 CultureInfo.DefaultThreadCurrentCulture = defaultCulture;
 CultureInfo.DefaultThreadCurrentUICulture = defaultCulture;
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("cors_policy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173")
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); // Allow credentials for CORS
+    });
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -64,10 +74,7 @@ builder.Services.AddScoped<IClinicDepartmentBedRepository, ClinicDepartmentBedRe
 builder.Services.AddScoped<IClinicDepartmentBedLogic, ClinicDepartmentBedLogic>();
 
 
-builder.Services.AddCors(p => p.AddPolicy("cors_policy_allow_all", builder =>
-{
-    builder.WithOrigins("https://localhost:5262").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
-}));
+
 
 builder.Services.Configure<ValidationConfiguration>(builder.Configuration.GetSection("Validation"));
 builder.Services.Configure<DBConfiguration>(builder.Configuration.GetSection("ConnectionStrings"));
@@ -96,10 +103,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("cors_policy");
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors("cors_policy_allow_all");
 
 app.MapIdentityApi<User>();
 

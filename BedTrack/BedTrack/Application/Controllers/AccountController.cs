@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging; // Import the logging namespace
+using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using BedTrack.Domain.Models;
 using BedTrack.Application.NewDTO;
@@ -113,47 +113,11 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginDTO model)
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
         {
-            try
-            {
-                _logger.LogInformation("Finding user by email.");
-                var user = await _userManager.FindByEmailAsync(model.Email);
-
-                if (user != null)
-                {
-                    _logger.LogInformation("User found. Attempting to sign in.");
-                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
-
-                    if (result.Succeeded)
-                    {
-                        return Ok(new { message = "Logged in successfully" });
-                    }
-
-                    if (result.RequiresTwoFactor)
-                    {
-                        return BadRequest(new { message = "Requires two-factor authentication" });
-                    }
-
-                    if (result.IsLockedOut)
-                    {
-                        return BadRequest(new { message = "User account locked out" });
-                    }
-                }
-                else
-                {
-                    return BadRequest(new { message = "User not found" });
-                }
-
-                return BadRequest(new { message = "Invalid login attempt" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Internal server error during login.");
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message, stackTrace = ex.StackTrace });
-            }
+            await _signInManager.SignOutAsync();
+            return Ok(new { message = "Logged out successfully" });
         }
     }
 }
