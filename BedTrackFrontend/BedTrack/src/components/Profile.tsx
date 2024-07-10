@@ -1,0 +1,103 @@
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { useUser } from './UserContext';
+import { Link } from 'react-router-dom';
+
+const ProfileContainer = styled.div`
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+`;
+
+const ProfileHeading = styled.h2`
+  text-align: center;
+  margin: auto;
+`;
+
+const TopContainer = styled.div`
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 40px;
+    align-items: center;
+`;
+
+const EditLink = styled.a`
+  color: #007bff;
+  cursor: pointer;
+  margin-right: 20px;
+  font-size: 20px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const ProfileItem = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+`;
+
+const ProfileLabel = styled.span`
+  font-weight: bold;
+  margin-right: 10px;
+`;
+
+const ProfileValue = styled.span`
+  color: black;
+  margin-left: 10px;
+`;
+
+
+
+const Profile: React.FC = () => {
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUserData(JSON.parse(storedUser));
+    }
+  }, []); 
+  
+  
+  if (!userData) {
+    return null;
+  }
+
+  return (
+    <ProfileContainer>
+      <TopContainer>
+      <ProfileHeading>Profil korisnika</ProfileHeading>
+      <Link to={`/profile/edit/${userData.id}`}> <EditLink>Uredi</EditLink></Link>
+      </TopContainer>
+        <ProfileItem>
+            <ProfileLabel>Ime:</ProfileLabel>
+            <ProfileValue>{userData.name}</ProfileValue>
+        </ProfileItem>
+        <ProfileItem>
+            <ProfileLabel>Email:</ProfileLabel>
+            <ProfileValue>{userData.email}</ProfileValue>
+        </ProfileItem>
+        <ProfileItem>
+            <ProfileLabel>Rola:</ProfileLabel>
+            <ProfileValue>{userData.role}</ProfileValue>
+        </ProfileItem>
+        <ProfileItem>
+            <ProfileLabel>Staus:</ProfileLabel>
+            <ProfileValue>{userData.status}</ProfileValue>
+        </ProfileItem>
+        <ProfileItem>
+            <ProfileLabel>Klinika:</ProfileLabel>
+            <ProfileValue>{userData.clinic}</ProfileValue>
+        </ProfileItem>
+        <ProfileItem>
+            <ProfileLabel>Odjel:</ProfileLabel>
+            <ProfileValue>{userData.department}</ProfileValue>
+        </ProfileItem>
+    </ProfileContainer>
+  );
+};
+
+export default Profile;

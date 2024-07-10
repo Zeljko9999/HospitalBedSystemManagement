@@ -53,6 +53,26 @@ namespace BedTrack.DAL.Repositories
             }
         }
 
+        public async Task<List<ClinicDepartmentBed>> GetAllBedsOfClinicDepartment(int clinicDepartmentId)
+        {
+            try
+            {
+                return await db.ClinicDepartmentBeds
+                             .Include(cdb => cdb.ClinicDepartment)
+                                .ThenInclude(cd => cd.Clinic)
+                             .Include(cdb => cdb.ClinicDepartment)
+                                .ThenInclude(cd => cd.Department)
+                             .Include(cdb => cdb.Bed)
+                             .Include(cdb => cdb.Patient)
+                             .Where(u => u.ClinicDepartmentId == clinicDepartmentId)
+                             .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving clinicDepartments.", ex);
+            }
+        }
+
         public async Task<ClinicDepartmentBed> GetClinicDepartmentForPatient(int patientId)
         {
             try

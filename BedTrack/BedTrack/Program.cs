@@ -25,9 +25,21 @@ builder.Services.AddCors(options =>
         builder.WithOrigins("http://localhost:5173")
                .AllowAnyHeader()
                .AllowAnyMethod()
-               .AllowCredentials(); // Allow credentials for CORS
+               .AllowCredentials();
     });
 });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Set cookie expiration time
+    options.SlidingExpiration = true; // Enable sliding expiration
+    options.LoginPath = "/Login";
+    options.LogoutPath = "/api/Account/logout";
+    options.AccessDeniedPath = "/AccessDenied";
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -35,9 +47,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
-    options.MinimumSameSitePolicy = SameSiteMode.Strict;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
     options.HttpOnly = HttpOnlyPolicy.Always;
-    options.Secure = CookieSecurePolicy.None; // Adjust as per your environment
+    options.Secure = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddIdentityCore<User>()
@@ -52,8 +64,9 @@ builder.Services.AddDbContext<BedTrackContext>(options =>
 builder.Services.AddControllers();
 
 
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserLogic, UserLogic>();
+builder.Services.AddScoped<IBasicUserLogic, BasicUserLogic>();
 builder.Services.AddScoped<IClinicRepository, ClinicRepository>();
 builder.Services.AddScoped<IClinicLogic, ClinicLogic>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();

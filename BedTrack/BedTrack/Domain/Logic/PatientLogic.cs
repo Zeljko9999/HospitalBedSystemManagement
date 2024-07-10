@@ -95,7 +95,6 @@ namespace BedTrack.Domain.Logic
             newPatient.Insurance = patient.Insurance;
             newPatient.HealthRecord = patient.HealthRecord;
             newPatient.HealthHistory = patient.HealthHistory;
-            newPatient.ClinicDepartmentBedId = patient.ClinicDepartmentBedId;
 
             await _patientRepository.UpdatePatient(newPatient);
         }
@@ -109,6 +108,12 @@ namespace BedTrack.Domain.Logic
         {
             var patient = await _patientRepository.GetPatient(id);
             return patient == null ? null : PatientDTO.FromModel(patient);
+        }
+
+        public async Task<IEnumerable<PatientDTO>> GetPatientsWithoutBed()
+        {
+            var patients = await _patientRepository.GetPatientsWithoutBeds();
+            return patients.Select(PatientDTO.FromModel);
         }
     }
 }

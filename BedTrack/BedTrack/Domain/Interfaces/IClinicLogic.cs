@@ -1,5 +1,4 @@
-﻿using BedTrack.Domain.Models;
-using BedTrack.Application.DTO;
+﻿using BedTrack.Application.DTO;
 using BedTrack.Application.NewDTO;
 
 

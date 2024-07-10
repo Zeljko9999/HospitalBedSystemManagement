@@ -11,6 +11,8 @@ namespace BedTrack.DAL.Interfaces
 
         public Task<ClinicDepartmentBed> GetClinicDepartmentForBed(int clinicDepartmentId, int bedId);
 
+        Task<List<ClinicDepartmentBed>> GetAllBedsOfClinicDepartment(int clinicDepartmentId);
+
         public Task<ClinicDepartmentBed> GetClinicDepartmentForPatient(int patientId);
 
         Task UpdateClinicDepartmentBed(ClinicDepartmentBed? updatedClinicDepartmentBed);

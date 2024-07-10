@@ -23,9 +23,7 @@ namespace BedTrack.Application.NewDTO
                 Insurance = Insurance,
                 HealthRecord = HealthRecord,
                 HealthHistory = HealthHistory,
-                ClinicDepartmentBedId = ClinicDepartmentBedId,
                 Users = null,
-                ClinicDepartmentBed = null
             };
         }
     }

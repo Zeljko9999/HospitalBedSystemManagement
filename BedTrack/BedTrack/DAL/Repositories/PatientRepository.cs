@@ -51,5 +51,12 @@ namespace BedTrack.DAL.Repositories
                 throw new ApplicationException("An error occurred while retrieving patient.", ex);
             }
         }
+
+        public async Task<List<Patient>> GetPatientsWithoutBeds()
+        {
+            return await db.Patients
+                .Where(p => !db.ClinicDepartmentBeds.Any(b => b.PatientId == p.Id))
+                .ToListAsync();
+        }
     }
 }

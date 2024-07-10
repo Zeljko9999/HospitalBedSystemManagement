@@ -68,7 +68,6 @@ namespace BedTrack.Domain.Logic
         {
             var clinicDepartment = clinicDepartmentDTO.ToModel();
 
-            ValidateIdFields(clinicDepartment.ClinicId, clinicDepartment.DepartmentId);
             ValidateQuantityField(clinicDepartment.BedQuantity);
             ValidateDescriptionField(clinicDepartment.Description);
 

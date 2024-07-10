@@ -6,6 +6,7 @@ using BedTrack.Domain.Logic;
 using BedTrack.Domain.Interfaces;
 using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BedTrack.Application.Controllers
 {
@@ -40,7 +41,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all departments
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAll()
         {
             var departments = await _departmentLogic.GetDepartments();

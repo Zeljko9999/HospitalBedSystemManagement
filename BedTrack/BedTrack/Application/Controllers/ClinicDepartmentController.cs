@@ -3,6 +3,7 @@ using BedTrack.Domain.Interfaces;
 using BedTrack.Domain.Logic;
 using BedTrack.Domain.Models;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all departments of clinic with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("/ClinicDepartments/{id}"), Authorize]
         public async Task<IActionResult> GetAll(int id)
         {
             var clinicDepartments = await _clinicDepartmentLogic.GetClinicDepartments(id);
@@ -48,7 +49,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the department of clinic with the specified ID
 
-        [HttpGet("{clinicId}&{departmentId}")]
+        [HttpGet("{clinicId}&{departmentId}"), Authorize]
         public async Task<IActionResult> Get(int clinicId, int departmentId)
         {
             var clinicDepartment = await _clinicDepartmentLogic.GetClinicDepartment(clinicId, departmentId);

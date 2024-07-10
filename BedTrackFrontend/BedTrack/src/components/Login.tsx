@@ -1,8 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext';
 
-// Styled-components for the login form
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
@@ -11,6 +12,9 @@ const LoginForm = styled.form`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  margin: auto;
+  margin-top: 200px;
 `;
 
 const Input = styled.input`
@@ -41,11 +45,13 @@ const Message = styled.div<{ error?: boolean }>`
   margin-top: 10px;
 `;
 
-const LoginComponent: React.FC = () => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -63,13 +69,29 @@ const LoginComponent: React.FC = () => {
     } else {
       setMessage('');
       try {
-        const response = await axios.post('https://localhost:5262/login?useCookies=true', {
-          email,
-          password
-        }, { withCredentials: true });
+        const loginResponse = await axios.post(
+          'https://localhost:5262/login?useCookies=true',
+          { email, password },
+          { withCredentials: true }
+        );
 
-        setMessage(response.data.message);
-        setIsError(!response.data.success);
+        if (loginResponse.status === 200) {
+          const userDetailsResponse = await axios.get(
+            `https://localhost:5262/api/User/userdetail/${email}`,
+            { withCredentials: true }
+          );
+
+          if (userDetailsResponse.status === 200) {
+            setUser(userDetailsResponse.data);
+            navigate('/home');
+          } else {
+            setMessage('Failed to fetch user details.');
+            setIsError(true);
+          }
+        } else {
+          setMessage('Login failed. Please check your credentials.');
+          setIsError(true);
+        }
       } catch (error) {
         console.error('Error while logging in:', error);
         setMessage('An error occurred while logging in. Please try again.');
@@ -80,7 +102,7 @@ const LoginComponent: React.FC = () => {
 
   return (
     <LoginForm onSubmit={handleLogin}>
-      <h2>Login</h2>
+      <h2>BedTrack prijava</h2>
       <Input
         type="email"
         placeholder="Email"
@@ -93,10 +115,10 @@ const LoginComponent: React.FC = () => {
         value={password}
         onChange={handlePasswordChange}
       />
-      <Button type="submit">Login</Button>
+      <Button type="submit">Prijava</Button>
       {message && <Message error={isError}>{message}</Message>}
     </LoginForm>
   );
 };
 
-export default LoginComponent;
+export default Login;

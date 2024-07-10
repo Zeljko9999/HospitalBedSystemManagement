@@ -11,9 +11,12 @@ using BedTrack.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using BedTrack.DAL.Data;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using FactoryApplication.Filters;
 
 namespace BedTrack.Application.Controllers
 {
+    [ErrorFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -22,18 +25,16 @@ namespace BedTrack.Application.Controllers
         private readonly RoleManager<IdentityRole<int>> _roleManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IUserLogic _userLogic;
-        private readonly BedTrackContext db;
         private readonly ILogger<AccountController> _logger;
 
         public AccountController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager,
-            SignInManager<User> signInManager, IUserLogic userLogic, ILogger<AccountController> logger, BedTrackContext context)
+            SignInManager<User> signInManager, IUserLogic userLogic, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _userLogic = userLogic;
             _logger = logger;
-            db = context;
         }
 
         [HttpPost("register")]
@@ -43,6 +44,17 @@ namespace BedTrack.Application.Controllers
             {
                 await _userLogic.ValidateEmailField(model.Email);
                 await _userLogic.ValidateNameField(model.Name);
+
+                // Convert input string fields into first letter as upppercase and all other into lowercase
+                if (!(string.IsNullOrEmpty(model.Name)))
+                {
+                    var words = model.Name.Split(' ');
+                    for (int i = 0; i < words.Length; i++)
+                    {
+                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
+                    }
+                    model.Name = string.Join(' ', words);
+                }
 
                 var user = model.ToModel();
 
@@ -117,6 +129,12 @@ namespace BedTrack.Application.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
+            {
+                Path = "/",
+                SameSite = SameSiteMode.None,
+                Secure = true
+            });
             return Ok(new { message = "Logged out successfully" });
         }
     }

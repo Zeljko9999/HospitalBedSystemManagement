@@ -42,11 +42,6 @@ namespace BedTrack.DAL.Data
             .Property(e => e.Alarm)
             .HasColumnType("datetime2");
 
-            modelBuilder.Entity<Patient>()
-            .HasOne(p => p.ClinicDepartmentBed)
-            .WithOne(b => b.Patient)
-            .HasForeignKey<ClinicDepartmentBed>(b => b.PatientId);
-
             base.OnModelCreating(modelBuilder);
 
         }

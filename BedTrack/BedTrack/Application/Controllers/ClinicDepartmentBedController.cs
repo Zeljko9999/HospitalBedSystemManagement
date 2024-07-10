@@ -3,11 +3,13 @@ using BedTrack.Domain.Interfaces;
 using BedTrack.Domain.Logic;
 using BedTrack.Domain.Models;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BedTrack.Application.Controllers
 {
+    [ErrorFilter]
     [Route("api/[controller]")]
     [ApiController]
     public class ClinicDepartmentBedController : ControllerBase
@@ -21,7 +23,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an clinicDepartmentBed object
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<IActionResult> Post([FromBody] NewClinicDepartmentBedDTO clinicDepartmentBed)
         {
 
@@ -45,10 +47,18 @@ namespace BedTrack.Application.Controllers
             return Ok(clinicDepartmentBed);
         }
 
+        // Read Operation 2 - Get all beds for cilinicDepartment with the specified clinicId and departmentId
+
+        [HttpGet("/AllBeds/{clinicId}&{departmentId}"), Authorize]
+        public async Task<IActionResult> GetAllBeds(int clinicId, int departmentId)
+        {
+            var clinicDepartmentBeds = await _clinicDepartmentBedLogic.GetBedsForClinicDepartment(clinicId, departmentId);
+            return Ok(clinicDepartmentBeds);
+        }
 
         // Update Operation - Update the clinicDepartmentBed with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPatch("edit/{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewClinicDepartmentBedDTO updatedClinicDepartmentBed)
         {
 

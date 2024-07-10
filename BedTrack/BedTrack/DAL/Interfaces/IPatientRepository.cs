@@ -8,6 +8,6 @@ namespace BedTrack.DAL.Interfaces
         Task UpdatePatient(Patient? updatedPatient);
         Task DeletePatient(int id);
         Task<Patient> GetPatient(int id);
-
+        Task<List<Patient>> GetPatientsWithoutBeds();
     }
 }

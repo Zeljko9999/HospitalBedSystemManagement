@@ -10,5 +10,6 @@ namespace BedTrack.Domain.Interfaces
         Task UpdatePatient(int id, NewPatientDTO? updatedPatient);
         Task DeletePatient(int id);
         Task<PatientDTO> GetPatient(int id);
+        Task<IEnumerable<PatientDTO>> GetPatientsWithoutBed();
     }
 }

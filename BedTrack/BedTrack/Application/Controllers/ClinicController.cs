@@ -45,7 +45,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all clinics
 
-        [HttpGet, Authorize(Roles = "Admin")]
+        [HttpGet, Authorize(Roles = "Admin, Boss")]
         public async Task<IActionResult> GetAll()
         {
             var clinics = await _clinicLogic.GetClinics();
@@ -54,7 +54,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the clinic with the specified ID
 
-        [HttpGet("{id}"), Authorize(Roles = "Doctor, Admin")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var clinic = await _clinicLogic.GetClinic(id);

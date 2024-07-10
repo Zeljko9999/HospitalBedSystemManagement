@@ -24,7 +24,6 @@ namespace BedTrack.Application.DTO
                 Insurance = model.Insurance,
                 HealthRecord = model.HealthRecord,
                 HealthHistory = model.HealthHistory,
-                ClinicDepartmentBedId = model.ClinicDepartmentBedId,
             };
         }
     }

@@ -5,7 +5,6 @@ namespace BedTrack.Domain.Models
 {
     public class User : IdentityUser<int>
     {
-
         public string Name { get; set; }
 
         public string? Status { get; set; }

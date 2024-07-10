@@ -14,11 +14,14 @@ namespace BedTrack.Domain.Logic
     public class ClinicDepartmentBedLogic : IClinicDepartmentBedLogic
     {
         private readonly IClinicDepartmentBedRepository _clinicDepartmentBedRepository;
+        private readonly IClinicDepartmentRepository _clinicDepartmentRepository;
         private readonly ValidationConfiguration _validationConfiguration;
 
-        public ClinicDepartmentBedLogic(IClinicDepartmentBedRepository clinicDepartmentBedRepository, IOptions<ValidationConfiguration> configuration)
+        public ClinicDepartmentBedLogic(IClinicDepartmentBedRepository clinicDepartmentBedRepository, IOptions<ValidationConfiguration> configuration,
+                                           IClinicDepartmentRepository clinicDepartmentRepository)
         {
             _clinicDepartmentBedRepository = clinicDepartmentBedRepository;
+            _clinicDepartmentRepository = clinicDepartmentRepository;
             _validationConfiguration = configuration.Value;
         }
 
@@ -51,7 +54,7 @@ namespace BedTrack.Domain.Logic
                 var existingClinicDepartmentPatient = await _clinicDepartmentBedRepository.GetClinicDepartmentForPatient(patientId.Value);
                 if (existingClinicDepartmentPatient != null)
                 {
-                    throw new UserErrorMessage("ClinicDepartment with that patient already exists.");
+                    throw new UserErrorMessage("ClinicDepartmentBed with that patient already exists.");
                 }
             }
         }
@@ -71,7 +74,6 @@ namespace BedTrack.Domain.Logic
 
 
             await ValidateIsAvailableField(clinicDepartmentBed.IsAvailable);
-            await ValidateIdFields(clinicDepartmentBed.ClinicDepartmentId, clinicDepartmentBed.BedId, clinicDepartmentBed.PatientId);
 
 
             var newClinicDepartmentBed = await _clinicDepartmentBedRepository.GetClinicDepartmentBed(id);
@@ -99,6 +101,18 @@ namespace BedTrack.Domain.Logic
         {
             var clinicDepartmentBed = await _clinicDepartmentBedRepository.GetClinicDepartmentBed(id);
             return clinicDepartmentBed == null ? null : ClinicDepartmentBedDTO.FromModel(clinicDepartmentBed);
+        }
+
+        public async Task<IEnumerable<ClinicDepartmentBedDTO>> GetBedsForClinicDepartment(int clinicId, int departmentId)
+        {
+            var clinicDepartment = await _clinicDepartmentRepository.GetDepartmentForClinic(clinicId, departmentId);
+            if (clinicDepartment != null)
+            {
+                var clinicDepartmentBeds = await _clinicDepartmentBedRepository.GetAllBedsOfClinicDepartment(clinicDepartment.Id);
+                return clinicDepartmentBeds.Select(ClinicDepartmentBedDTO.FromModel);
+            }
+            else
+                return null;
         }
     }
 }
