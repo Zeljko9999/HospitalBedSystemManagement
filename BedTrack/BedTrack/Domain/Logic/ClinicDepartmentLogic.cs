@@ -53,7 +53,6 @@ namespace BedTrack.Domain.Logic
              }   
         }
 
-
         public async Task CreateNewClinicDepartment(NewClinicDepartmentDTO? clinicDepartment)
         {
             await ValidateIdFields(clinicDepartment.ClinicId, clinicDepartment.DepartmentId);

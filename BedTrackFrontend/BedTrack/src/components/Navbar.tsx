@@ -12,7 +12,12 @@ const Container = styled.div`
   background-color: #007bff;
   padding: 10px 20px;
   border: 3px solid #0f51c4;
-
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+  font-family: sans-serif;
 `;
 const StyledNavLink = styled(NavLink)`
   color: white;
@@ -35,8 +40,9 @@ const Button = styled.button`
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
 
   &:hover {
     background-color: #e60000;
@@ -76,8 +82,9 @@ const Navbar: React.FC = () => {
   return (
     <Container>
       <NavElement>
-      <StyledNavLink to="/home">BedTrack</StyledNavLink>
+        <StyledNavLink to="/home">BedTrack</StyledNavLink>
         <StyledNavLink to="/clinic">Klinika</StyledNavLink>
+        <StyledNavLink to="/patients">Pacijenti</StyledNavLink>
       </NavElement>
       <User>
       {user ? (

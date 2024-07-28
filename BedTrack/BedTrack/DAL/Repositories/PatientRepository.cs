@@ -39,6 +39,19 @@ namespace BedTrack.DAL.Repositories
             }
         }
 
+        public async Task<List<Patient>> GetAllPatients()
+        {
+            try
+            {
+                return await db.Patients
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving patients.", ex);
+            }
+        }
+
         public async Task<Patient> GetPatient(int id)
         {
             try
@@ -54,9 +67,16 @@ namespace BedTrack.DAL.Repositories
 
         public async Task<List<Patient>> GetPatientsWithoutBeds()
         {
-            return await db.Patients
+            try
+            {
+                return await db.Patients
                 .Where(p => !db.ClinicDepartmentBeds.Any(b => b.PatientId == p.Id))
                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving patients.", ex);
+            }
         }
     }
 }

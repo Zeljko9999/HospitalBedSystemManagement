@@ -28,7 +28,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an clinic object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewClinicDTO clinic)
         {
 
@@ -71,7 +71,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the clinic with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewClinicDTO updatedClinic)
         {
 
@@ -87,7 +87,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the clinic with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var clinic = await _clinicLogic.GetClinic(id);

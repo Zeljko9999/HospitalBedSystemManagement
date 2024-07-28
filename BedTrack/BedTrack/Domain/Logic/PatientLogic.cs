@@ -104,6 +104,12 @@ namespace BedTrack.Domain.Logic
             _patientRepository.DeletePatient(id);
         }
 
+        public async Task<IEnumerable<PatientDTO>> GetAllPatients()
+        {
+            var patients = await _patientRepository.GetAllPatients();
+            return patients.Select(PatientDTO.FromModel);
+        }
+
         public async Task<PatientDTO> GetPatient(int id)
         {
             var patient = await _patientRepository.GetPatient(id);

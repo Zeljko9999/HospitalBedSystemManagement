@@ -4,6 +4,7 @@ using BedTrack.Domain.Interfaces;
 using BedTrack.Domain.Logic;
 using BedTrack.Domain.Models;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an UserEvent object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewUserEventDTO userEvent)
         {
 
@@ -40,7 +41,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all events of user with the specified ID
 
-        [HttpGet("user/{userId}/events")]
+        [HttpGet("user/{userId}/events"), Authorize]
         public async Task<IActionResult> GetAll(int userId)
         {
             var userEvents = await _userEventLogic.GetUserEvents(userId);
@@ -49,7 +50,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the closest event of user with the specified ID
 
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}"), Authorize]
         public async Task<IActionResult> Get(int userId)
         {
             var userEvent = await _userEventLogic.GetUserEvent(userId);
@@ -66,7 +67,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the event with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewUserEventDTO updatedUserEvent)
         {
 
@@ -82,7 +83,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the UserEvent with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var userEvent = await _userEventLogic.GetUserEventRow(id);

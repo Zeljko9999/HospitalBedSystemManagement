@@ -10,8 +10,7 @@ namespace BedTrack.Application.DTO
         public int? Age { get; set; }
         public string Insurance { get; set; }
         public string? HealthRecord { get; set; }
-        public string? HealthHistory { get; set; }
-        public int ClinicDepartmentBedId { get; set; }   
+        public string? HealthHistory { get; set; } 
 
     public static PatientDTO FromModel(Patient model)
         {

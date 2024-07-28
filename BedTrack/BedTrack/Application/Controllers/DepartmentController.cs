@@ -24,7 +24,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an department object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewDepartmentDTO department)
         {
 
@@ -50,7 +50,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the department with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var department = await _departmentLogic.GetDepartment(id);
@@ -83,7 +83,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the department with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var department = await _departmentLogic.GetDepartment(id);

@@ -13,6 +13,11 @@ const FormContainer = styled.form`
   max-width: 600px;
   margin: 50px 200px;
   justify-content: space-between;
+  background-color: white;
+  padding: 20px;
+  border: 2px solid #1959c8;
+  border-radius: 8px;
+  background-color: white;
 `;
 
 const FormSection = styled.div`
@@ -42,14 +47,14 @@ const SubmitButton = styled.button`
   cursor: pointer;
   font-weight: 500;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 1rem;
   border: none;
   color: #fff;
   background: #ff3e4e;
   transition: all 0.25s ease;
   width: 100px;
   margin: 20px;
-  height: 35px;
+  height: 40px;
 
   &:hover {
     box-shadow: 0 10px 20px -10px rgba(255, 62, 78, 0.6);
@@ -65,13 +70,14 @@ const SuccessMessage = styled.div`
 const BackButton = styled(Link)`
   display: inline-block;
   margin: 20px;
+  font-size: 15px;
 
   button {
     margin-top: 10px;
     cursor: pointer;
     font-weight: 500;
     border-radius: 12px;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     border: none;
     color: #fff;
     background: #ff3e4e;
@@ -88,6 +94,14 @@ const BackButton = styled(Link)`
   }
 `;
 
+const EditLabel = styled.label`
+  margin-left: 20px;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 19px;
+  font-family: sans-serif;
+`;
+
 
 const EditProfile: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -95,7 +109,7 @@ const EditProfile: React.FC = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const { setUser } = useUser();
+  const {user, setUser } = useUser();
 
   const [formData, setFormData] = useState<User>({
     id: 0,
@@ -157,6 +171,7 @@ const EditProfile: React.FC = () => {
       </BackButton>
       <FormContainer onSubmit={handleFormSubmit}>
         <FormSection>
+        <EditLabel>Ime i prezime:</EditLabel>
           <InputField
             name="name"
             type="text"
@@ -164,7 +179,9 @@ const EditProfile: React.FC = () => {
             value={formData.name}
             onChange={handleInputChange}
             required
+            disabled={!(user && (user.role === 'Admin'))}
           />
+          <EditLabel>Email:</EditLabel>
            <InputField
             name="email"
             type="email"
@@ -172,18 +189,22 @@ const EditProfile: React.FC = () => {
             value={formData.email}
             onChange={handleInputChange}
             required
+            disabled={!(user && (user.role === 'Admin'))}
           />
+          <EditLabel>Status dostupnosti:</EditLabel>
           <InputField
             name="status"
             placeholder="Status"
             value={formData.status}
             onChange={handleInputChange}
           />
+          <EditLabel>Klinika:</EditLabel>
           <SelectField
             name="clinicId"
             value={formData.clinicId}
             onChange={handleInputChange}
             required
+            disabled={!(user && (user.role === 'Admin'))}
           >
             <option value=''>Klinika</option>
             {clinics.map(clinic => (
@@ -192,11 +213,13 @@ const EditProfile: React.FC = () => {
               </option>
             ))}
           </SelectField>
+          <EditLabel>Odjel:</EditLabel>
           <SelectField
             name="departmentId"
             value={formData.departmentId}
             onChange={handleInputChange}
             required
+            disabled={!(user && (user.role === 'Admin'))}
           >
             <option value=''>Odjel</option>
             {departments.map(department => (

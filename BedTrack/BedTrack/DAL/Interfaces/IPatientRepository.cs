@@ -7,6 +7,7 @@ namespace BedTrack.DAL.Interfaces
         Task AddPatient(Patient? patient);
         Task UpdatePatient(Patient? updatedPatient);
         Task DeletePatient(int id);
+        Task<List<Patient>> GetAllPatients();
         Task<Patient> GetPatient(int id);
         Task<List<Patient>> GetPatientsWithoutBeds();
     }

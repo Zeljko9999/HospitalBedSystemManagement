@@ -6,6 +6,7 @@ using BedTrack.Domain.Logic;
 using BedTrack.Domain.Interfaces;
 using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BedTrack.Application.Controllers
 {
@@ -23,7 +24,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an bed object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewBedDTO bed)
         {
 
@@ -40,7 +41,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all beds
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAll()
         {
             var beds = await _bedLogic.GetBeds();
@@ -49,7 +50,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the bed with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var bed = await _bedLogic.GetBed(id);
@@ -66,7 +67,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the bed with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewBedDTO updatedBed)
         {
 
@@ -82,7 +83,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the bed with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var bed = await _bedLogic.GetBed(id);

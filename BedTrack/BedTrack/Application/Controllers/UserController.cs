@@ -8,6 +8,7 @@ using BedTrack.DAL.Interfaces;
 using BedTrack.Domain.Interfaces;
 using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BedTrack.Application.Controllers
 {
@@ -25,7 +26,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all users
 
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<IActionResult> GetAll()
         {
             var users = await _userLogic.GetUsers();
@@ -34,7 +35,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the user with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var user = await _userLogic.GetUser(id);
@@ -49,7 +50,7 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        [HttpGet("userdetail/{email}")]
+        [HttpGet("userdetail/{email}"), Authorize]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             var user = await _userLogic.GetUserByEmail(email);
@@ -66,7 +67,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the user with the specified ID
 
-        [HttpPatch("edit/{id}")]
+        [HttpPatch("edit/{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewUserDTO updatedUser)
         {
 
@@ -82,7 +83,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the user with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var user = await _userLogic.GetUser(id);
@@ -99,7 +100,7 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        [HttpGet("clinic/{clinicId}/names")]
+        [HttpGet("clinic/{clinicId}/names"), Authorize]
         public async Task<ActionResult<IEnumerable<string>>> GetUserNamesByClinicId(int clinicId)
         {
             var userNames = await _userLogic.GetUsersByClinicId(clinicId);
@@ -107,7 +108,7 @@ namespace BedTrack.Application.Controllers
         }
 
 
-        [HttpGet("department/{departmentId}/names")]
+        [HttpGet("department/{departmentId}/names"), Authorize]
         public async Task<ActionResult<IEnumerable<string>>> GetUserNamesByDepartmentId(int departmentId)
         {
             var userNames = await _userLogic.GetUsersByClinicId(departmentId);

@@ -40,7 +40,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get clinicDepartmentBed with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var clinicDepartmentBed = await _clinicDepartmentBedLogic.GetClinicDepartmentBedRow(id);
@@ -74,7 +74,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the clinicDepartmentBed with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var clinicDepartmentBed = await _clinicDepartmentBedLogic.GetClinicDepartmentBedRow(id);

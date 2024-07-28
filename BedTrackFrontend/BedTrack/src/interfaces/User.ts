@@ -7,5 +7,5 @@ export interface User {
     clinicId: number;
     clinic: string;
     departmentId: number;
-    department: string; // Assuming 'department' should replace 'deparmtnet'
+    department: string;
   }

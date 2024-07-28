@@ -125,7 +125,7 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        [HttpPost("logout")]
+        [HttpPost("logout"), Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();

@@ -6,16 +6,13 @@ import { Clinic as ClinicType } from '../interfaces/Clinic';
 import { ClinicDepartment } from '../interfaces/ClinicDepartment';
 import Bed from './Bed';
 
-const Container = styled.div`
-  padding: 20px;
-  background-color: #67b6df;
-`;
-
 const Header = styled.h2`
-  color: red;
   text-align: center;
-  font-size: 35px;
+  font-size: 40px;
   margin-bottom: 50px;
+  font-family: "Arsenal SC", sans-serif;
+  font-weight: 700;
+  font-style: normal;
 `;
 
 const Filter = styled.div`
@@ -24,7 +21,7 @@ const Filter = styled.div`
   justify-content: center;
 `;
 
-const NewElement = styled.div`
+const BedSection = styled.div`
   margin-top: 20px;
   padding: 10px;
   background-color: #f1f1f1;
@@ -45,9 +42,11 @@ const InfoSection = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
+  margin-top: 10px;
   font-weight: bold;
   font-size: 25px;
   justify-content: center;
+  font-family: sans-serif;
 `;
 
 const InfoLine = styled.div`
@@ -69,6 +68,7 @@ const Value = styled.span`
 const Beds = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 `;
 
 interface FormData {
@@ -155,7 +155,7 @@ const Clinic: React.FC = () => {
   };
 
   return (
-    <Container>
+    <>
       <Header>Pregled kreveta prema klinikama i odjelima</Header>
       <Filter>
         <h2>Klinika:</h2>
@@ -173,7 +173,7 @@ const Clinic: React.FC = () => {
             </option>
           ))}
         </SelectField>
-        <h2>Odjel:</h2>
+        <h2 style={ {marginLeft: '10px'}}>Odjel:</h2>
         <SelectField
           name="departmentId"
           value={formData.departmentId}
@@ -191,7 +191,7 @@ const Clinic: React.FC = () => {
       </Filter>
       {error && <p>{error}</p>}
       {formData.clinicId !== 0 && formData.departmentId !== 0 && (
-        <NewElement>
+        <BedSection>
           <InfoSection>
           <InfoLine>
             <Label>Klinika: </Label>
@@ -206,7 +206,7 @@ const Clinic: React.FC = () => {
           {loadingBeds ? (
             <p>Loading beds...</p>
           ) : (
-            <div>
+            <>
               {beds.length > 0 ? (
                 beds.map((bed, index) => (
                   <Bed key={index} bed={bed} />
@@ -214,12 +214,12 @@ const Clinic: React.FC = () => {
               ) : (
                 <p>Kreveti nisu pronađeni.</p>
               )}
-            </div>
+            </>
           )}
           </Beds>
-        </NewElement>
+        </BedSection>
       )}
-    </Container>
+    </>
   );
 };
 

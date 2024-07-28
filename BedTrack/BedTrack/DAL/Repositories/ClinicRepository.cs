@@ -14,7 +14,6 @@ namespace BedTrack.DAL.Repositories
             db = context;
         }
 
-
         public async Task AddClinic(Clinic? clinic)
         {
             db.Clinics.Add(clinic);

@@ -3,6 +3,7 @@ using BedTrack.Domain.Interfaces;
 using BedTrack.Domain.Logic;
 using BedTrack.Domain.Models;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an UserPatient object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewUserPatientDTO userPatient)
         {
 
@@ -40,7 +41,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get all patients of user with the specified ID
 
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}"), Authorize]
         public async Task<IActionResult> GetAllPatients(int userId)
         {
             var userPatients = await _userPatientLogic.GetPatientsForUser(userId);
@@ -49,7 +50,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get all user of patient with the specified ID
 
-        [HttpGet("{patientId}")]
+        [HttpGet("{patientId}"), Authorize]
         public async Task<IActionResult> GetAllUsers(int patientId)
         {
             var userPatients = await _userPatientLogic.GetUsersForPatient(patientId);
@@ -58,7 +59,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the UserPatient with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewUserPatientDTO updatedUserPatient)
         {
 
@@ -74,7 +75,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the UserPatient with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var userPatient = await _userPatientLogic.GetUserPatientRow(id);

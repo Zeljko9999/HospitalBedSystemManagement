@@ -10,6 +10,7 @@ using BedTrack.Domain.Logic;
 using BedTrack.Domain.Interfaces;
 using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BedTrack.Application.Controllers
 {
@@ -27,7 +28,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an event object
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Post([FromBody] NewEventDTO eventt)
         {
 
@@ -45,7 +46,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the event with the specified ID
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
         {
             var eventt = await _eventLogic.GetEvent(id);
@@ -62,7 +63,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the event with the specified ID
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] NewEventDTO updatedEvent)
         {
 
@@ -78,7 +79,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the event with the specified ID
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var eventt = await _eventLogic.GetEvent(id);

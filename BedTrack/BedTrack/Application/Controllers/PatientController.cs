@@ -39,7 +39,16 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        // Read Operation 1 - Get the patient with the specified ID
+        // Read Operation 3 - Get all patients
+
+        [HttpGet, Authorize(Roles = "Boss")]
+        public async Task<IActionResult> Get()
+        {
+            var patients = await _patientLogic.GetAllPatients();
+            return Ok(patients);
+        }
+
+        // Read Operation 2 - Get the patient with the specified ID
 
         [HttpGet("{id}"), Authorize]
         public async Task<IActionResult> Get(int id)
@@ -56,7 +65,7 @@ namespace BedTrack.Application.Controllers
             }
         }
 
-        // Read Operation 2 - Get all patients without bed
+        // Read Operation 3 - Get all patients without bed
         [HttpGet("without-beds"), Authorize]
         public async Task<IActionResult> GetPatientsWithoutBeds()
         {
