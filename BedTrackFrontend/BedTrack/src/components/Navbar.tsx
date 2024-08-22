@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
 import axios from 'axios';
+import { FaHospitalSymbol } from "react-icons/fa";
 
 const Container = styled.div`
   display: flex;
@@ -19,11 +20,20 @@ const Container = styled.div`
   box-shadow: 0 0 20px rgba(0, 0, 0, .1);
   font-family: sans-serif;
 `;
-const StyledNavLink = styled(NavLink)`
+const StyledNavLinkHome = styled(NavLink)`
+  color: white;
+  text-decoration: none;
+  margin-right: 10px;
+  font-family: fantasy;
+  font-size: 35px;
+
+`;
+
+const StyledNavLinkUser = styled(NavLink)`
   color: white;
   text-decoration: none;
   margin-right: 20px;
-  margin-left: 20px;
+  font-size: 19px;
 
   &:hover {
     text-decoration: underline;
@@ -34,6 +44,22 @@ const StyledNavLink = styled(NavLink)`
     color: green;
   }
 `;
+
+const StyledNavLink= styled(NavLink)`
+  color: white;
+  text-decoration: none;
+  margin-left: 40px;
+
+  &:hover {
+    text-decoration: underline;
+    color: red;
+  }
+
+   &.active {
+    color: green;
+  }
+`;
+
 
 const Button = styled.button`
   background-color: #ff4d4d;
@@ -60,6 +86,12 @@ const User = styled.div`
 
 `
 
+const StyledHospitalSymbol = styled(FaHospitalSymbol)`
+  fill: white;
+  width: 3rem;
+  height: 3rem;
+`;
+
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
@@ -82,14 +114,15 @@ const Navbar: React.FC = () => {
   return (
     <Container>
       <NavElement>
-        <StyledNavLink to="/home">BedTrack</StyledNavLink>
+        <StyledNavLinkHome to="/home"><StyledHospitalSymbol /> </StyledNavLinkHome>
+        <StyledNavLinkHome to="/home"> BedTrack</StyledNavLinkHome>
         <StyledNavLink to="/clinic">Klinika</StyledNavLink>
         <StyledNavLink to="/patients">Pacijenti</StyledNavLink>
       </NavElement>
       <User>
       {user ? (
         <>
-          <StyledNavLink to="/profile">{user.name}</StyledNavLink>
+          <StyledNavLinkUser to="/profile">{user.name}</StyledNavLinkUser>
           <Button onClick={handleLogout}>Odjava</Button>
         </>
       ) : (
