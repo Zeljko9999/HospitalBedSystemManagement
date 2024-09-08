@@ -107,12 +107,18 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var swaggerEnabled = builder.Configuration.GetValue<bool>("Swagger:Enabled");
+
+if (swaggerEnabled)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = "swagger"; // Set to "" if you want Swagger at the root
+    });
 }
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 
@@ -124,5 +130,7 @@ app.UseAuthorization();
 app.MapIdentityApi<User>();
 
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();

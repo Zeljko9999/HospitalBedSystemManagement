@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
+import api from '../service/api';
 
 const LoginForm = styled.form`
   display: flex;
@@ -69,18 +69,10 @@ const Login: React.FC = () => {
     } else {
       setMessage('');
       try {
-        const loginResponse = await axios.post(
-          'https://localhost:5262/login?useCookies=true',
-          { email, password },
-          { withCredentials: true }
-        );
-
+        const loginResponse = await api.login(email, password);
+        
         if (loginResponse.status === 200) {
-          const userDetailsResponse = await axios.get(
-            `https://localhost:5262/api/User/userdetail/${email}`,
-            { withCredentials: true }
-          );
-
+          const userDetailsResponse = await api.getUserDetails(email);     
           if (userDetailsResponse.status === 200) {
             setUser(userDetailsResponse.data);
             navigate('/home');

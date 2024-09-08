@@ -12,14 +12,6 @@ import Clinic from './components/Clinic';
 import EditBed from './components/EditBed';
 import Patients from './components/Patients';
 
-//required packages:
-//npm install styled-components
-//npm install styled-components @types/styled-components
-//npm install axios
-//npm install cors
-//npm install react-router-dom
-
-
 const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;

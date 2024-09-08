@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useUser } from './UserContext';
 import { Link } from 'react-router-dom';
 
 const ProfileContainer = styled.div`

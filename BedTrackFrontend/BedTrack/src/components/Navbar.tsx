@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from './UserContext';
-import axios from 'axios';
 import { FaHospitalSymbol } from "react-icons/fa";
+import api from '../service/api';
 
 const Container = styled.div`
   display: flex;
@@ -98,10 +98,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-       await axios.post(
-        'https://localhost:5262/api/Account/logout', null,
-        { withCredentials: true }
-      );
+       await api.logout();
     }
     catch (error) {
     console.error('Error while logging out:', error);

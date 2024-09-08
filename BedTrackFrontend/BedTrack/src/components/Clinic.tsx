@@ -1,10 +1,10 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import { useUser } from './UserContext';
 import { Clinic as ClinicType } from '../interfaces/Clinic';
 import { ClinicDepartment } from '../interfaces/ClinicDepartment';
 import Bed from './Bed';
+import api from '../service/api';
 
 const Header = styled.h2`
   text-align: center;
@@ -112,8 +112,8 @@ const Clinic: React.FC = () => {
 
   const fetchAllClinicsAndDepartments = async () => {
     try {
-      const clinicsResponse = await axios.get<ClinicType[]>('https://localhost:5262/api/Clinic', { withCredentials: true });
-      setClinics(clinicsResponse.data);
+      const clinicsResponse = await api.getAllClinicsAndDepartments();
+      setClinics(clinicsResponse);
     } catch (error) {
       console.error('Error fetching clinics:', error);
       setError('Error fetching clinics');
@@ -122,8 +122,8 @@ const Clinic: React.FC = () => {
 
   const fetchDepartmentsForClinic = async (clinicId: number) => {
     try {
-      const response = await axios.get<ClinicDepartment[]>(`https://localhost:5262/ClinicDepartments/${clinicId}`, { withCredentials: true });
-      setDepartments(response.data);
+      const departmentsResponse = await api.getAllClinicDepartments(clinicId);
+      setDepartments(departmentsResponse);
     } catch (error) {
       console.error('Error fetching departments:', error);
       setError('Error fetching departments');
@@ -133,8 +133,8 @@ const Clinic: React.FC = () => {
   const fetchBedsData = async (clinicId: number, departmentId: number) => {
     setLoadingBeds(true);
     try {
-      const response = await axios.get<any[]>(`https://localhost:5262/AllBeds/${clinicId}&${departmentId}`, { withCredentials: true });
-      setBeds(response.data);
+      const bedsResponse = await api.getAllBedsForClinicDep(clinicId, departmentId);
+      setBeds(bedsResponse);
       setLoadingBeds(false);
     } catch (error) {
       console.error('Error fetching beds:', error);

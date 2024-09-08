@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,6 +5,7 @@ import { useUser } from './UserContext';
 import { Clinic } from '../interfaces/Clinic';
 import { Department } from '../interfaces/Department';
 import { User } from '../interfaces/User';
+import api from "../service/api";
 
 const FormContainer = styled.form`
   display: flex;
@@ -124,35 +124,50 @@ const EditProfile: React.FC = () => {
   });
 
   useEffect(() => {
-    axios.get(`https://localhost:5262/api/User/${id}`, { withCredentials: true })
-      .then(res => setFormData(res.data))
-      .catch(err => console.log(err.message));
+    const fetchUserData = async () => {
+      try {
+        const userRes = await api.getUserData(id!); 
+        setFormData(userRes);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+  
+    fetchUserData();
   }, [id]);
+  
 
   useEffect(() => {
-    Promise.all([
-      axios.get("https://localhost:5262/api/Clinic", { withCredentials: true }),
-      axios.get("https://localhost:5262/api/Department", { withCredentials: true }),
-    ])
-      .then(([resClinics, resDepartments]) => {
-        setClinics(resClinics.data);
-        setDepartments(resDepartments.data);
-      })
-      .catch(err => console.log(err.message));
+    const fetchData = async () => {
+      try {
+        const [clinicsRes, departmentsRes] = await Promise.all([
+          api.getAllClinicsAndDepartments(),
+          api.getAllDepartments(),
+        ]);
+  
+        setClinics(clinicsRes);
+        setDepartments(departmentsRes);
+      } catch (err) {
+        console.error('Error fetching clinics and departments:', err);
+      }
+    };
+  
+    fetchData();
   }, []);
-
+  
   const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
-      [name]: name === 'clinicId' || name === 'departmentId' ? Number(value) : value
+      [name]: name === 'clinicId' || name === 'departmentId' ? Number(value) : value,
     });
   };
+  
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.patch(`https://localhost:5262/api/User/edit/${id}`, formData, { withCredentials: true });
+      await api.editUser(id!, formData)
       setShowSuccessMessage(true);
       setUser(formData); // Update user context
       localStorage.setItem('user', JSON.stringify(formData)); // Sync local storage
@@ -160,7 +175,7 @@ const EditProfile: React.FC = () => {
         setShowSuccessMessage(false);
       }, 3000);
     } catch (error) {
-      console.error('Error while updating data:', error);
+      console.error('Error while updating user data:', error);
     }
   };
 

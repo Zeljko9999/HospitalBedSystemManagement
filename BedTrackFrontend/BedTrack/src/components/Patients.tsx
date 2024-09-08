@@ -1,11 +1,8 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
-import { useUser } from './UserContext';
-import { Clinic as ClinicType } from '../interfaces/Clinic';
-import { ClinicDepartment } from '../interfaces/ClinicDepartment';
 import { Patient } from '../interfaces/Patient';
 import PatientCard from './PatientCard';
+import api from '../service/api';
 
 const Header = styled.h2`
   text-align: center;
@@ -91,28 +88,28 @@ const Patients: React.FC = () => {
   const [loadingPatients, setLoadingPatients] = useState<boolean>(false);
 
   useEffect(() => {
+
     fetchPatients();
   }, [selectedFilter]);
-
-  const fetchPatients = () => {
-    let url = "https://localhost:5262/api/Patient";
-
-    if (selectedFilter === "option2") {
-      url += "?filter=option2";
-    } else if (selectedFilter === "option3") {
-      url += "?filter=option3";
+  
+  const fetchPatients = async () => {
+    try {
+      setLoadingPatients(true);
+      const patientsResponse = await api.getFilteredPatients(selectedFilter);
+      setPatients(patientsResponse);
+      
+    } catch (error) {
+      console.error("Error fetching patients", error);
+    } finally {
+      setLoadingPatients(false);
     }
-    setLoadingPatients(true);
-    axios
-      .get(url, { withCredentials: true })
-      .then(response => setPatients(response.data))
-      .catch(error => console.error("Error fetching patients", error));
-    setLoadingPatients(false);
   };
+  
 
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedFilter(event.target.value);
   };
+
 
   return (
     <>

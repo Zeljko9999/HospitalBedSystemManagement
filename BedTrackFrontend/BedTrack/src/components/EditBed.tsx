@@ -1,10 +1,10 @@
-import axios from "axios";
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useUser } from './UserContext';
-import { Clinic } from '../interfaces/Clinic';
 import { BedCard } from '../interfaces/BedCard';
+import api from "../service/api";
+import { Patient } from "../interfaces/Patient";
 
 const FormContainer = styled.form`
   display: flex;
@@ -125,7 +125,7 @@ const EditLabel = styled.label`
   font-family: sans-serif;
 `;
 
-const Patient = styled.div`
+const PatientComp = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
   font-size: 19px;
@@ -136,7 +136,7 @@ const EditBed: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useUser();
 
-  const [patients, setPatients] = useState<Clinic[]>([]);
+  const [patients, setPatients] = useState<Patient[]>([]);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showPatientSelect, setShowPatientSelect] = useState(false);
   const [isPatientAdded, setIsPatientAdded] = useState(false);
@@ -158,8 +158,8 @@ const EditBed: React.FC = () => {
   useEffect(() => {
     const fetchBedData = async () => {
       try {
-        const response = await axios.get(`https://localhost:5262/api/ClinicDepartmentBed/${id}`, { withCredentials: true });
-        const fetchedData = response.data;
+        const bedResponse = await api.getBedData(id!);
+        const fetchedData = bedResponse.data;
         fetchedData.isAvailable = Boolean(fetchedData.isAvailable);
         setFormData(fetchedData);
         setIsPatientAdded(fetchedData.patientId !== null);
@@ -171,11 +171,15 @@ const EditBed: React.FC = () => {
   }, [id, isPatientAdded]);
 
   useEffect(() => {
-    axios.get("https://localhost:5262/api/Patient/without-beds", { withCredentials: true })
-      .then(res => {
-        setPatients(res.data);
-      })
-      .catch(err => console.log(err.message));
+    const fetchPatients = async () => {
+      try {
+        const patientsResponse = await api.getPatientsWithoutBed();
+        setPatients(patientsResponse);
+      } catch (error) {
+        console.error('Error fetching patients without bed', error);
+      }
+    };
+    fetchPatients();
   }, [isPatientAdded]);
 
 
@@ -190,13 +194,7 @@ const EditBed: React.FC = () => {
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.patch(
-        `https://localhost:5262/api/ClinicDepartmentBed/edit/${id}`,
-        formData.patientId !== null
-          ? { ...formData, isAvailable: false }
-          : { ...formData },
-        { withCredentials: true }
-      );      
+      await api.editBed(id!, formData);
       setMessage("Krevet je uspješno uređen!");
       setShowSuccessMessage(true);
       setIsPatientAdded(true);
@@ -214,11 +212,7 @@ const EditBed: React.FC = () => {
 
   const handleDeletePatientClick = async () => {
     try {
-      await axios.patch(`https://localhost:5262/api/ClinicDepartmentBed/edit/${id}`, {
-        ...formData,
-        isAvailable: true,
-        patientId: null
-      }, { withCredentials: true });
+      await api.editBed(id!, formData);
       setFormData({
         ...formData,
         isAvailable: true,
@@ -262,9 +256,9 @@ const EditBed: React.FC = () => {
             value={formData.status}
             onChange={handleInputChange}
           />
-          <Patient>
+          <PatientComp>
           <EditLabel>Pacijent: </EditLabel><label>{formData.patient}</label>
-          </Patient>
+          </PatientComp>
           {user && user.role === 'Clerk' && !isPatientAdded && (
             <>     
               <AddPatientButton type="button" onClick={handleAddPatientClick}>
