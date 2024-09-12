@@ -113,9 +113,7 @@ export const getPatientsWithoutBed = async (): Promise<Patient[]> => {
 export const editBed = async (id: string, formData: BedCard) => {
   try {
      await serverClient.patch<{id: string, formData: BedCard}>(`/api/ClinicDepartmentBed/edit/${id}`,
-      formData.patientId !== null
-        ? { ...formData, isAvailable: false }
-        : { ...formData }
+      formData
      );
   } catch (error) {
     console.error('Error while editing bed', error);
@@ -134,14 +132,16 @@ export const editUser = async (id: string, formData: User) => {
   }
 };
 
-export const getFilteredPatients = async (selectedFilter: string): Promise<Patient[]> => {
+export const getFilteredPatients = async (selectedFilter: string, clinicId: number, departmentId: number): Promise<Patient[]> => {
 
-  let url = "https://localhost:5262/api/Patient";
+  let url = "/api/Patient";
 
   if (selectedFilter === "option2") {
     url += "?filter=option2";
   } else if (selectedFilter === "option3") {
-    url += "?filter=option3";
+    url += `/department-patients${clinicId}&${departmentId}`;
+  } else if (selectedFilter === "option4") {
+    url += "?filter=option4";
   }
   try {
     const patientsResponse = await serverClient.get<Patient[]>(url);
@@ -151,6 +151,18 @@ export const getFilteredPatients = async (selectedFilter: string): Promise<Patie
     throw error;
   }
 };
+
+export const createPatient = async (formData: Patient) => {
+  try {
+     await serverClient.post<{id: string, formData: Patient}>(`/api/Patient`,
+      formData
+     );
+  } catch (error) {
+    console.error('Error while creating patient', error);
+    throw error;
+  }
+};
+
 
 
 
@@ -173,5 +185,6 @@ export default {
   getPatientsWithoutBed,
   editBed,
 
-  getFilteredPatients
+  getFilteredPatients,
+  createPatient
 };

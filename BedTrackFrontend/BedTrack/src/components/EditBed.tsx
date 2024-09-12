@@ -159,10 +159,9 @@ const EditBed: React.FC = () => {
     const fetchBedData = async () => {
       try {
         const bedResponse = await api.getBedData(id!);
-        const fetchedData = bedResponse.data;
-        fetchedData.isAvailable = Boolean(fetchedData.isAvailable);
-        setFormData(fetchedData);
-        setIsPatientAdded(fetchedData.patientId !== null);
+        bedResponse.isAvailable = Boolean(bedResponse.isAvailable);
+        setFormData(bedResponse);
+        setIsPatientAdded(bedResponse.patientId !== null);
       } catch (error) {
         console.error('Error fetching bed data:', error);
       }
@@ -192,12 +191,20 @@ const EditBed: React.FC = () => {
   };
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault(); 
     try {
-      await api.editBed(id!, formData);
+      const updatedFormData = formData.patientId !== null
+        ? { ...formData, isAvailable: false }
+        : { ...formData };
+  
+      setFormData(updatedFormData);
+  
+      await api.editBed(id!, updatedFormData);
+  
       setMessage("Krevet je uspješno uređen!");
       setShowSuccessMessage(true);
       setIsPatientAdded(true);
+  
       setTimeout(() => {
         setShowSuccessMessage(false);
       }, 3000);
@@ -205,6 +212,7 @@ const EditBed: React.FC = () => {
       console.error('Error while updating data:', error);
     }
   };
+  
 
   const handleAddPatientClick = () => {
     setShowPatientSelect(!showPatientSelect);
@@ -212,23 +220,27 @@ const EditBed: React.FC = () => {
 
   const handleDeletePatientClick = async () => {
     try {
-      await api.editBed(id!, formData);
-      setFormData({
+      const updatedFormData = {
         ...formData,
         isAvailable: true,
         patient: "",
-        patientId: null
-      });
+        patientId: null,
+      };
+  
+      setFormData(updatedFormData);
+  
+      await api.editBed(id!, updatedFormData);
       setMessage("Pacijent je uspješno otpušten!");
       setIsPatientAdded(false);
       setShowSuccessMessage(true);
+
       setTimeout(() => {
         setShowSuccessMessage(false);
       }, 3000);
     } catch (error) {
-      console.error('Error while updating data:', error);
+      console.error("Error while updating data:", error);
     }
-  };
+};
 
   return (
     <>

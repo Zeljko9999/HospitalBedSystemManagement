@@ -8,7 +8,7 @@ namespace BedTrack.DAL.Interfaces
 
         Task<List<Clinic>> GetAllClinics();
 
-        public Task<Clinic> GetClinic(int id);
+        Task<Clinic> GetClinic(int id);
 
         Task UpdateClinic(Clinic? updatedClinic);
 

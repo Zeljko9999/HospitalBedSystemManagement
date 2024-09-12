@@ -1,22 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using BedTrack.Domain.Models;
-using BedTrack.DAL.Repositories;
-using BedTrack.DAL.Interfaces;
-using BedTrack.Domain.Logic;
+﻿using BedTrack.Application.NewDTO;
 using BedTrack.Domain.Interfaces;
-using BedTrack.Application.NewDTO;
 using FactoryApplication.Filters;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BedTrack.Application.Controllers
 {
     [ErrorFilter]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ClinicController : ControllerBase
     {
         private readonly IClinicLogic _clinicLogic;
@@ -28,7 +21,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an clinic object
 
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] NewClinicDTO clinic)
         {
 
@@ -54,7 +47,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the clinic with the specified ID
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var clinic = await _clinicLogic.GetClinic(id);
@@ -71,7 +64,7 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the clinic with the specified ID
 
-        [HttpPut("{id}"), Authorize]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] NewClinicDTO updatedClinic)
         {
 
@@ -87,7 +80,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the clinic with the specified ID
 
-        [HttpDelete("{id}"), Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var clinic = await _clinicLogic.GetClinic(id);

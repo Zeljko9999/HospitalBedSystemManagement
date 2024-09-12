@@ -22,8 +22,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("cors_policy", builder =>
     {
-        builder.WithOrigins("http://localhost:5173")
-               .AllowAnyHeader()
+        builder.WithOrigins("http://localhost:5173", "http://app.bedtrack.com")
+              .AllowAnyHeader()
                .AllowAnyMethod()
                .AllowCredentials();
     });
@@ -85,7 +85,6 @@ builder.Services.AddScoped<IUserPatientRepository, UserPatientRepository>();
 builder.Services.AddScoped<IUserPatientLogic, UserPatientLogic>();
 builder.Services.AddScoped<IClinicDepartmentBedRepository, ClinicDepartmentBedRepository>();
 builder.Services.AddScoped<IClinicDepartmentBedLogic, ClinicDepartmentBedLogic>();
-
 
 
 

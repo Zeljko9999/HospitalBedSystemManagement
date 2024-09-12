@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Patient } from '../interfaces/Patient';
 import PatientCard from './PatientCard';
 import api from '../service/api';
+import { useUser } from './UserContext';
+import { Link } from 'react-router-dom';
 
 const Header = styled.h2`
   text-align: center;
@@ -16,7 +18,6 @@ const Header = styled.h2`
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 50px;
   margin-bottom: 10px;
   justify-content: center;
 `;
@@ -46,7 +47,6 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-top: 15px;
 `;
 
 const AddPatientButton = styled.button`
@@ -83,6 +83,7 @@ const PatientSection = styled.div`
 `;
 
 const Patients: React.FC = () => {
+    const { user } = useUser();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("all");
   const [loadingPatients, setLoadingPatients] = useState<boolean>(false);
@@ -95,7 +96,7 @@ const Patients: React.FC = () => {
   const fetchPatients = async () => {
     try {
       setLoadingPatients(true);
-      const patientsResponse = await api.getFilteredPatients(selectedFilter);
+      const patientsResponse = await api.getFilteredPatients(selectedFilter, user?.clinicId!, user?.departmentId!);
       setPatients(patientsResponse);
       
     } catch (error) {
@@ -109,7 +110,6 @@ const Patients: React.FC = () => {
   const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedFilter(event.target.value);
   };
-
 
   return (
     <>
@@ -157,20 +157,24 @@ const Patients: React.FC = () => {
       </FilterContainer>
       <PatientSection>
         <ButtonContainer>
-        <AddPatientButton>
-          + Dodaj novog pacijenta
-        </AddPatientButton>
+        <Link to="/create-patient">
+          <AddPatientButton>
+            + Dodajte novog pacijenta
+          </AddPatientButton>
+        </Link>
         </ButtonContainer>
           {loadingPatients ? (
             <p>Loading beds...</p>
             ) : (
             <>
-              {patients.length > 0 ? (
-                patients.map((patient, index) => (
+              {patients.length > 0 && user?.role !== 'boss' && selectedFilter === 'all' ? (
+                <p>Nemate ovlasti za ovu akciju!.</p>
+              ) : patients.length > 0 ? (
+                  patients.map((patient, index) => (
                   <PatientCard key={index} patient={patient} />
-                ))
+                  ))
               ) : (
-                <p>Pacijenti nisu pronađeni.</p>
+                  <p>Pacijenti nisu pronađeni.</p>
               )}
             </>
           )}

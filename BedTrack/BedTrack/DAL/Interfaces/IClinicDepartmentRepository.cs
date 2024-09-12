@@ -1,4 +1,5 @@
-﻿using BedTrack.Domain.Models;
+﻿using BedTrack.Application.DTO;
+using BedTrack.Domain.Models;
 
 namespace BedTrack.DAL.Interfaces
 {
@@ -9,6 +10,7 @@ namespace BedTrack.DAL.Interfaces
         Task<List<ClinicDepartment>> GetAllDepartmentsOfClinic(int clinicId);
 
         public Task<ClinicDepartment> GetDepartmentForClinic(int clinicId, int departmentId);
+
         public Task<ClinicDepartment> GetClinicDepartment(int id);
 
         Task UpdateClinicDepartment(ClinicDepartment? updatedClinicDepartment);

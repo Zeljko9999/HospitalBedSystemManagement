@@ -40,7 +40,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 1 - Get clinicDepartmentBed with the specified ID
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var clinicDepartmentBed = await _clinicDepartmentBedLogic.GetClinicDepartmentBedRow(id);
@@ -58,8 +58,8 @@ namespace BedTrack.Application.Controllers
 
         // Update Operation - Update the clinicDepartmentBed with the specified ID
 
-        [HttpPatch("edit/{id}"), Authorize]
-        public async Task<IActionResult> Put(int id, [FromBody] NewClinicDepartmentBedDTO updatedClinicDepartmentBed)
+        [HttpPatch("edit/{id}")]
+        public async Task<IActionResult> Patch(int id, [FromBody] NewClinicDepartmentBedDTO updatedClinicDepartmentBed)
         {
 
             if (updatedClinicDepartmentBed == null)
@@ -74,7 +74,7 @@ namespace BedTrack.Application.Controllers
 
         // Delete Operation - Delete the clinicDepartmentBed with the specified ID
 
-        [HttpDelete("{id}"), Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var clinicDepartmentBed = await _clinicDepartmentBedLogic.GetClinicDepartmentBedRow(id);

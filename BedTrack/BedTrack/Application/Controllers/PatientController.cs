@@ -13,6 +13,7 @@ namespace BedTrack.Application.Controllers
     [ErrorFilter]
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PatientController : ControllerBase
     {
         private readonly IPatientLogic _patientLogic;
@@ -24,7 +25,7 @@ namespace BedTrack.Application.Controllers
 
         // Create an patient object
 
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] NewPatientDTO patient)
         {
 
@@ -41,7 +42,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 3 - Get all patients
 
-        [HttpGet, Authorize(Roles = "Boss")]
+        [HttpGet /*Authorize(Roles = "Boss")*/]
         public async Task<IActionResult> Get()
         {
             var patients = await _patientLogic.GetAllPatients();
@@ -50,7 +51,7 @@ namespace BedTrack.Application.Controllers
 
         // Read Operation 2 - Get the patient with the specified ID
 
-        [HttpGet("{id}"), Authorize]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             var patient = await _patientLogic.GetPatient(id);
@@ -66,16 +67,33 @@ namespace BedTrack.Application.Controllers
         }
 
         // Read Operation 3 - Get all patients without bed
-        [HttpGet("without-beds"), Authorize]
+        [HttpGet("without-beds")]
         public async Task<IActionResult> GetPatientsWithoutBeds()
         {
             var patients = await _patientLogic.GetPatientsWithoutBed();
             return Ok(patients);
         }
 
+        // Read Operation 4 - Get all patients from ClinicDepartment
+
+        [HttpGet("department-patients{clinicId}&{departmentId}")]
+        public async Task<IActionResult> GetPatientsOnClinicDepartment(int clinicId, int departmentId)
+        {
+            var patients = await _patientLogic.GetPatientsOnClinicDepartment(clinicId, departmentId);
+            if (patients is null)
+            {
+                return NotFound($"Could not find an clinicDepartmentBed with ID");
+            }
+            else
+            {
+                return Ok(patients);
+            }
+        }
+
+
         // Update Operation - Update the patient with the specified ID
 
-        [HttpPatch("edit/{id}"), Authorize]
+        [HttpPatch("edit/{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] NewPatientDTO updatedPatient)
         {
 

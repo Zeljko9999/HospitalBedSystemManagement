@@ -111,5 +111,20 @@ namespace BedTrack.DAL.Repositories
                 throw new ApplicationException("An error occurred while retrieving clinicDepartmentBed.", ex);
             }
         }
+
+        public async Task<IEnumerable<Patient>> GetPatientsOnClinicDepartment(int clDepId)
+        {
+            try
+            {
+                return await db.ClinicDepartmentBeds
+                .Where(cdb => cdb.ClinicDepartmentId == clDepId && cdb.PatientId.HasValue)
+                .Select(cdb => cdb.Patient)
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("An error occurred while retrieving patient.", ex);
+            }
+        }
     }
 }

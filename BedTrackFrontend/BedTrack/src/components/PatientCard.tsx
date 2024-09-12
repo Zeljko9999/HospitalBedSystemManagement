@@ -10,6 +10,8 @@ const CardContainer = styled.div`
   border-radius: 4px;
   text-align:center;
   border: 3px solid #c8c4c4;
+  width: 80%;
+  align-self: center;
 `;
 
 const Name = styled.h3`
@@ -58,6 +60,7 @@ const TopContainer = styled.div`
 const EditLink = styled.a`
   &&{
     font-size: 18px;
+    margin-left: 20px;
   }
 `;
 
@@ -71,6 +74,7 @@ const PatientCard: React.FC<PatientProps> = ({ patient }) => {
       <TopContainer>
       <Name>{patient.name}</Name>
       <Link to={`/patients/edit/${patient.id}`}> <EditLink>Uredi</EditLink></Link>
+      <Link to={`/patients/edit/${patient.id}`}> <EditLink>Detalji</EditLink></Link>
       </TopContainer>
 
       <PatientInfo>

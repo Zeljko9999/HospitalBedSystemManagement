@@ -11,6 +11,7 @@ import EditProfile from './components/EditProfile';
 import Clinic from './components/Clinic';
 import EditBed from './components/EditBed';
 import Patients from './components/Patients';
+import NewPatient from './components/NewPatient';
 
 const GlobalStyle = createGlobalStyle`
   a {
@@ -56,6 +57,7 @@ const AppContent: React.FC = () => {
         <Route path="/home" element={user ? <Home /> : <Navigate to="/login" />} />
         <Route path="/clinic" element={user ? <Clinic /> : <Navigate to="/login" />} />
         <Route path="/patients" element={user ? <Patients /> : <Navigate to="/login" />} />
+        <Route path="/create-patient" element={user ? <NewPatient /> : <Navigate to="/login" />} />
         <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
         <Route path="/profile/edit/:id" element={user ? <EditProfile /> : <Navigate to="/login" />} />
         <Route path="/beds/edit/:id" element={user ? <EditBed /> : <Navigate to="/login" />} />

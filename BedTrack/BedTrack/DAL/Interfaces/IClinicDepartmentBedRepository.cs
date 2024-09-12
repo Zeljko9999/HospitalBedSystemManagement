@@ -15,6 +15,8 @@ namespace BedTrack.DAL.Interfaces
 
         public Task<ClinicDepartmentBed> GetClinicDepartmentForPatient(int patientId);
 
+        public Task<IEnumerable<Patient>> GetPatientsOnClinicDepartment(int clDepId);
+
         Task UpdateClinicDepartmentBed(ClinicDepartmentBed? updatedClinicDepartmentBed);
 
         Task DeleteClinicDepartmentBed(int id);

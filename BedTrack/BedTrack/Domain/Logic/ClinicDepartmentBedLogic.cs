@@ -84,8 +84,6 @@ namespace BedTrack.Domain.Logic
 
             newClinicDepartmentBed.IsAvailable = clinicDepartmentBed.IsAvailable;
             newClinicDepartmentBed.Status = clinicDepartmentBed.Status;
-            newClinicDepartmentBed.ClinicDepartmentId = clinicDepartmentBed.ClinicDepartmentId;
-            newClinicDepartmentBed.BedId = clinicDepartmentBed.BedId;
             newClinicDepartmentBed.PatientId = clinicDepartmentBed.PatientId;
 
 

@@ -15,12 +15,18 @@ namespace BedTrack.Domain.Logic
     public class PatientLogic : IPatientLogic
     {
         private readonly IPatientRepository _patientRepository;
+        private readonly IClinicDepartmentBedRepository _clinicDepartmentBedRepository;
+        private readonly IClinicDepartmentRepository _clinicDepartmentRepository;
         private readonly ValidationConfiguration _validationConfiguration;
 
-        public PatientLogic(IPatientRepository patientRepository, IOptions<ValidationConfiguration> configuration)
+        public PatientLogic(IPatientRepository patientRepository, IClinicDepartmentBedRepository clinicDepartmentBedRepository,
+                IOptions<ValidationConfiguration> configuration, IClinicDepartmentRepository clinicDepartmentRepository)
         {
             _patientRepository = patientRepository;
+            _clinicDepartmentBedRepository = clinicDepartmentBedRepository;
+            _clinicDepartmentRepository = clinicDepartmentRepository;
             _validationConfiguration = configuration.Value;
+            _clinicDepartmentRepository = clinicDepartmentRepository;
         }
 
         private void ValidateNameField(string? patient)
@@ -119,6 +125,14 @@ namespace BedTrack.Domain.Logic
         public async Task<IEnumerable<PatientDTO>> GetPatientsWithoutBed()
         {
             var patients = await _patientRepository.GetPatientsWithoutBeds();
+            return patients.Select(PatientDTO.FromModel);
+        }
+
+        public async Task<IEnumerable<PatientDTO>> GetPatientsOnClinicDepartment(int clinicId, int departmentId)
+        {
+            var clinicDepartment = await _clinicDepartmentRepository.GetDepartmentForClinic(clinicId, departmentId);
+
+            var patients = await _clinicDepartmentBedRepository.GetPatientsOnClinicDepartment(clinicDepartment.Id);
             return patients.Select(PatientDTO.FromModel);
         }
     }
